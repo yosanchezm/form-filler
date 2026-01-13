@@ -1,0 +1,29 @@
+# Archivos y directorios generados
+*.pyc
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Entorno virtual
+.venv/
+venv/
+ENV/
+env/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# macOS
+.DS_Store
+
+# Outputs generados
+outputs/*.docx
+!outputs/.gitkeep
+
+# Archivos temporales
+*.tmp
+*.log
