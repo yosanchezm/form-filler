@@ -5,7 +5,7 @@ Configuración central del proyecto.
 # =========================
 # Constantes de procesamiento
 # =========================
-MIN_UNDERSCORES = 5
+MIN_UNDERSCORES = 3
 
 # =========================
 # Directorios

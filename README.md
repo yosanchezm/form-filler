@@ -58,6 +58,7 @@ streamlit run app.py
 ### Preparar la base de conocimiento
 
 Crea un archivo Excel (.xlsx) con dos columnas:
+
 - **Atributo**: El nombre del campo
 - **Valor**: El valor correspondiente
 
@@ -74,48 +75,117 @@ Guárdalo en la carpeta `knowledge/`.
 ## 🧩 Módulos
 
 ### config/
+
 Configuración centralizada del proyecto (constantes, directorios, etc).
 
 ### models/
+
 Modelos de datos usados en el proyecto. Define `FillEvent` para representar eventos de relleno.
 
 ### utils/
+
 Utilidades reutilizables:
+
 - `text_utils.py`: Normalización de texto, detección de underscores
 - `docx_utils.py`: Manipulación de párrafos, tablas y placeholders en DOCX
 
 ### core/
+
 Lógica de negocio principal:
+
 - `knowledge_base.py`: Carga y búsqueda en la base de conocimiento
 - `filler.py`: Lógica de relleno de campos (brackets, underscores, tablas)
 - `processor.py`: Orquestación del proceso completo
 
 ### ai/
+
 Integración con modelos de IA:
+
 - `providers.py`: Conectores para OpenAI, Gemini, Claude, Groq, Together, OpenRouter
 - `prompts.py`: Construcción de prompts para los modelos
 
 ### ui/
+
 Interfaz de usuario con Streamlit.
 
 ## 🤖 Proveedores de IA Soportados
 
-- OpenAI (GPT-4o, GPT-4o-mini)
-- Google Gemini (1.5 Flash, 1.5 Pro, 2.0 Flash)
-- Anthropic Claude (3.5 Sonnet, 3.5 Haiku, 3 Opus)
+### Con LangChain (Recomendado) 🦜
+
+- **OpenAI** (GPT-4o, GPT-4o-mini, GPT-4-turbo)
+- **Anthropic Claude** (Claude Sonnet 4, 3.5 Haiku, 3 Opus)
+- **Google Gemini** (2.5 Flash, 2.0 Flash, 2.5 Pro)
+
+### API Directa (Fallback)
+
 - Groq (Llama 3.1, Mixtral)
 - Together AI
 - OpenRouter
 
 ## 📝 Características
 
+### Detección de Campos
+
+- ✅ Placeholders entre corchetes `[campo]`
+- ✅ Campos con underscores (`_____`)
+- ✅ Tablas label/valor
+- ✅ Checkboxes (Sí/No, opciones múltiples)
+- ✅ Campos de fecha con múltiples espacios
+- ✅ Texto destacado (negrita, subrayado)
+
+### Procesamiento Inteligente
+
 - ✅ Relleno automático basado en reglas
-- ✅ Detección de campos con underscores (`_____`)
-- ✅ Detección de placeholders entre corchetes `[campo]`
-- ✅ Relleno de tablas (label/valor)
-- ✅ Completado opcional con IA
+- ✅ **Búsqueda semántica** en KB con embeddings
+- ✅ Completado con IA (LangChain)
+- ✅ **Output estructurado** garantizado
+- ✅ Retry automático en caso de fallos
 - ✅ Umbral de confianza configurable
+
+### Interfaz
+
+- ✅ Preview del documento antes de procesar
+- ✅ Análisis de campos detectados
+- ✅ Modo "solo reglas" sin IA
 - ✅ Descarga directa del resultado
+
+## 🆕 Novedades v2.0
+
+### LangChain Integration
+
+```python
+# Output estructurado garantizado con Pydantic
+from ai.schemas import FormFillerResponse, FieldUpdate
+
+# Retry automático y manejo de errores
+from ai.langchain_processor import call_llm_with_structured_output
+```
+
+### Búsqueda Semántica
+
+```python
+# Encuentra matches aunque las palabras no coincidan exactamente
+from core.knowledge_base import find_value_hybrid
+
+# "Razón social" encontrará "Nombre de la empresa"
+result = find_value_hybrid("Razón social", kb)
+```
+
+### Nuevos Tipos de Campos
+
+- `checkbox`: Sí/No, X, opciones múltiples
+- `date_field`: Campos de fecha compuestos
+- `highlighted`: Texto con formato especial
+
+## 🛠️ Instalación de Dependencias
+
+```bash
+# Instalar todas las dependencias (incluyendo LangChain)
+pip install -r requirements.txt
+
+# Solo dependencias básicas (sin búsqueda semántica)
+pip install streamlit python-docx pandas openpyxl requests
+```
 
 ## 🛠️ Buenas Prácticas Implementadas
 
@@ -125,6 +195,8 @@ Interfaz de usuario con Streamlit.
 4. **Type hints**: Anotaciones de tipos para mejor mantenibilidad
 5. **Configuración centralizada**: Constantes en un solo lugar
 6. **Modularidad**: Fácil de extender y testear
+7. **Output estructurado**: Pydantic schemas para validación
+8. **Graceful degradation**: Funciona sin LangChain usando API directa
 
 ## 📄 Licencia
 
